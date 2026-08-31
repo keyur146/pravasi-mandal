@@ -1,8 +1,7 @@
 import { Inter, DM_Sans } from "next/font/google";
 import "./globals.css";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
 import { LanguageProvider } from "./components/LanguageContext";
+import PublicShell from "./components/PublicShell";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -27,14 +26,13 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${inter.variable} ${dmSans.variable}`}>
-      <body className="bg-ivory text-charcoal font-sans antialiased">
+    <html lang="en" className={`${inter.variable} ${dmSans.variable}`} suppressHydrationWarning>
+      <body className="bg-ivory text-charcoal font-sans antialiased" suppressHydrationWarning>
         <LanguageProvider>
-          <Header />
-          <main>{children}</main>
-          <Footer />
+          <PublicShell>{children}</PublicShell>
         </LanguageProvider>
       </body>
     </html>
   );
 }
+
