@@ -14,12 +14,10 @@ export default function Header() {
   const pathname = usePathname();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    const onScroll = () => setScrolled(window.scrollY > 80);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
-
-  useEffect(() => { setMenuOpen(false); }, [pathname]);
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : '';
@@ -38,15 +36,30 @@ export default function Header() {
 
   return (
     <>
-      <header
-        className={`sticky top-0 z-50 bg-white transition-all duration-300 ${scrolled ? 'shadow-md border-b border-border' : 'border-b border-border/60'
-          }`}
-      >
-        {/* ── TOP BAR: Big Logo + Language Toggle + Support Us CTA ── */}
-        <div className="bg-white py-1.5 border-b border-border/40">
+      {/* ── TOP NON-STICKY HEADER: Trust Bar + Middle Logo Bar ── */}
+      <div className="relative bg-white z-40">
+        {/* 1. Charity Trust Micro-Bar */}
+        <div className="bg-slate-900 text-white text-[0.72rem] sm:text-[0.78rem] py-1.5 px-4 sm:px-8">
+          <div className="max-w-[1200px] mx-auto flex items-center justify-between font-sans">
+            <div className="flex items-center gap-2">
+              <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="font-semibold text-slate-200">Registered Charity · Est. 1984</span>
+              <span className="hidden md:inline text-slate-400">|</span>
+              <span className="hidden md:inline text-slate-300 font-medium">Northamptonshire’s Dedicated Asian Elders Care Centre</span>
+            </div>
+            <div className="flex items-center gap-4 text-slate-300 font-semibold">
+              <a href="tel:01933442955" className="hover:text-white transition-colors flex items-center gap-1.5">
+                <span>Tel: 01933 442955</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* 2. Middle Logo Bar (NON-STICKY — scrolls away naturally) */}
+        <div className="bg-white py-2 border-b border-slate-200">
           <div className="max-w-[1200px] mx-auto px-6 lg:px-10 flex items-center justify-between">
 
-            {/* Prominent Large Logo (at least double size) */}
+            {/* Prominent Large Logo */}
             <Link href="/" className="flex items-center shrink-0 group">
               <div className="relative h-16 sm:h-20 md:h-24 w-52 sm:w-64 md:w-100">
                 <Image
@@ -54,7 +67,7 @@ export default function Header() {
                   alt="Pravasi Mandal Logo"
                   fill
                   sizes="(min-width: 768px) 400px, 256px"
-                  className="object-cover object-left"
+                  className="object-contain object-left"
                   priority
                 />
               </div>
@@ -67,9 +80,9 @@ export default function Header() {
                 onClick={() => setLang(lang === 'en' ? 'gu' : 'en')}
                 id="lang-toggle"
                 aria-label="Toggle language"
-                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-[0.85rem] font-sans font-medium text-warm-gray bg-gray-100 border border-border hover:border-pm-blue hover:text-pm-blue transition-colors duration-200"
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-[0.85rem] font-sans font-bold text-slate-800 bg-slate-100 border border-slate-300 hover:border-pm-blue hover:text-pm-blue hover:bg-white transition-all duration-200 shadow-2xs"
               >
-                <Globe size={15} className="text-pm-blue" />
+                <Globe size={16} className="text-pm-blue stroke-[2.2]" />
                 <span>{lang === 'en' ? 'ગુજરાતી' : 'English'}</span>
               </button>
 
@@ -77,9 +90,9 @@ export default function Header() {
               <Link
                 href="/support"
                 id="support-cta"
-                className="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 bg-pm-blue text-white text-[0.875rem] font-sans font-medium rounded-xl hover:bg-pm-blue-dark shadow-xs transition-colors duration-200"
+                className="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-pm-blue to-pm-blue-dark text-white text-[0.875rem] font-sans font-bold rounded-xl hover:shadow-md transition-all duration-200 hover:scale-[1.02] shadow-xs"
               >
-                <Heart size={15} />
+                <Heart size={16} className="fill-white/20 stroke-[2.5]" />
                 <span>{t('nav_support')}</span>
               </Link>
 
@@ -88,35 +101,102 @@ export default function Header() {
                 id="hamburger-btn"
                 onClick={() => setMenuOpen(!menuOpen)}
                 aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-                className="md:hidden flex items-center justify-center w-10 h-10 rounded-xl border border-border text-charcoal hover:bg-gray-100 transition-colors"
+                className="md:hidden flex items-center justify-center w-10 h-10 rounded-xl border border-slate-300 text-slate-900 hover:bg-slate-100 transition-colors"
               >
-                {menuOpen ? <X size={22} /> : <Menu size={22} />}
+                {menuOpen ? <X size={22} className="stroke-[2.5]" /> : <Menu size={22} className="stroke-[2.5]" />}
               </button>
             </div>
 
           </div>
         </div>
+      </div>
 
-        {/* ── BOTTOM BAR: Page Navigation Links ── */}
-        <div className="hidden md:block bg-gray-100 border-t border-b border-gray-300/40">
-          <div className="max-w-[1200px] mx-auto px-6 lg:px-10">
-            <nav className="flex items-center gap-2 py-2" aria-label="Main navigation">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`px-5 py-1.5 rounded-xl font-sans font-semibold transition-all duration-200 ${isActive(link.href)
-                    ? 'text-pm-blue bg-white shadow-xs font-semibold border border-border'
-                    : 'text-charcoal hover:text-pm-blue hover:bg-white/80'
-                    }`}
+      {/* ── STICKY NAVIGATION BAR (Only this bar sticks on scroll) ── */}
+      <div
+        className={`sticky top-0 z-50 transition-all duration-200 ${scrolled
+          ? 'bg-white/95 backdrop-blur-md shadow-md border-b border-slate-300 py-1'
+          : 'bg-slate-100/95 border-b border-slate-200 backdrop-blur-xs hidden md:block'
+          }`}
+      >
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-10 flex items-center justify-between min-h-[58px]">
+
+          {/* Scrolled Logo (Substantially Bigger: h-14 md:h-16 w-48 md:w-60) */}
+          {scrolled && (
+            <Link href="/" className="flex items-center shrink-0 mr-4 group py-1">
+              <div className="relative h-12 sm:h-14 md:h-16 w-44 sm:w-52 md:w-60">
+                <Image
+                  src="/assets/img/pravasi-mandal-logo.png"
+                  alt="Pravasi Mandal"
+                  fill
+                  sizes="(min-width: 768px) 240px, 180px"
+                  className="object-contain object-left"
+                  priority
+                />
+              </div>
+            </Link>
+          )}
+
+          {/* Desktop Navigation Links */}
+          <nav className="hidden md:flex items-center gap-1.5 py-1.5" aria-label="Main navigation">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`px-4 py-2 rounded-xl font-sans font-bold text-[0.92rem] transition-all duration-150 ${isActive(link.href)
+                  ? 'text-pm-blue bg-white shadow-xs border border-slate-300 font-extrabold'
+                  : 'text-slate-800 hover:text-pm-blue hover:bg-white/80'
+                  }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Desktop Right Actions in Sticky Bar */}
+          <div className="hidden md:flex items-center gap-3">
+            {scrolled && (
+              <>
+                <button
+                  onClick={() => setLang(lang === 'en' ? 'gu' : 'en')}
+                  aria-label="Toggle language"
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold text-slate-800 bg-slate-100 border border-slate-300 hover:border-pm-blue hover:text-pm-blue"
                 >
-                  {link.label}
+                  <Globe size={14} className="text-pm-blue stroke-[2.2]" />
+                  <span>{lang === 'en' ? 'ગુજરાતી' : 'English'}</span>
+                </button>
+                <Link
+                  href="/support"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-pm-blue to-pm-blue-dark text-white text-[0.85rem] font-sans font-bold rounded-xl shadow-xs hover:shadow transition-all"
+                >
+                  <Heart size={15} className="fill-white/20" />
+                  <span>{t('nav_support')}</span>
                 </Link>
-              ))}
-            </nav>
+              </>
+            )}
           </div>
+
+          {/* Mobile Bar shown ONLY when scrolled on mobile */}
+          {scrolled && (
+            <div className="md:hidden flex items-center gap-2">
+              <button
+                onClick={() => setLang(lang === 'en' ? 'gu' : 'en')}
+                aria-label="Toggle language"
+                className="px-2.5 py-1.5 text-xs font-bold text-slate-800 bg-slate-100 border border-slate-300 rounded-lg shadow-2xs"
+              >
+                {lang === 'en' ? 'ગુજરાતી' : 'EN'}
+              </button>
+              <button
+                onClick={() => setMenuOpen(!menuOpen)}
+                aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+                className="flex items-center justify-center w-10 h-10 rounded-xl border border-slate-300 text-slate-900 bg-white shadow-2xs"
+              >
+                {menuOpen ? <X size={20} className="stroke-[2.5]" /> : <Menu size={20} className="stroke-[2.5]" />}
+              </button>
+            </div>
+          )}
+
         </div>
-      </header>
+      </div>
 
       {/* ── MOBILE SLIDE-OUT MENU ── */}
       <div
@@ -127,7 +207,7 @@ export default function Header() {
         aria-label="Mobile navigation"
       >
         {/* Mobile Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200">
           <div className="relative h-14 w-52">
             <Image
               src="/assets/img/pravasi-mandal-logo.png"
@@ -139,10 +219,10 @@ export default function Header() {
           </div>
           <button
             onClick={() => setMenuOpen(false)}
-            className="flex items-center justify-center w-10 h-10 rounded-xl border border-border text-charcoal hover:bg-gray-100 transition-colors"
+            className="flex items-center justify-center w-10 h-10 rounded-xl border border-slate-300 text-slate-900 hover:bg-slate-100 transition-colors"
             aria-label="Close menu"
           >
-            <X size={20} />
+            <X size={20} className="stroke-[2.5]" />
           </button>
         </div>
 
@@ -153,9 +233,9 @@ export default function Header() {
               key={link.href}
               href={link.href}
               onClick={() => setMenuOpen(false)}
-              className={`px-4 py-3.5 rounded-xl text-[1.05rem] font-sans font-medium transition-colors ${isActive(link.href)
-                ? 'text-pm-blue bg-pm-blue-light font-semibold'
-                : 'text-charcoal hover:bg-gray-100'
+              className={`px-4 py-3.5 rounded-xl text-[1.05rem] font-sans font-bold transition-colors ${isActive(link.href)
+                ? 'text-pm-blue bg-pm-blue-light font-extrabold'
+                : 'text-slate-800 hover:bg-slate-100'
                 }`}
             >
               {link.label}
@@ -168,16 +248,16 @@ export default function Header() {
           <Link
             href="/support"
             onClick={() => setMenuOpen(false)}
-            className="w-full py-3.5 bg-pm-blue text-white text-center text-[0.95rem] font-sans font-medium rounded-xl hover:bg-pm-blue-dark transition-colors flex items-center justify-center gap-2"
+            className="w-full py-3.5 bg-gradient-to-r from-pm-blue to-pm-blue-dark text-white text-center text-[0.95rem] font-sans font-bold rounded-xl shadow-md transition-colors flex items-center justify-center gap-2"
           >
-            <Heart size={16} />
+            <Heart size={18} className="fill-white/20 stroke-[2.5]" />
             {t('nav_support')}
           </Link>
           <button
             onClick={() => { setLang(lang === 'en' ? 'gu' : 'en'); setMenuOpen(false); }}
-            className="w-full py-3 border border-border text-warm-gray text-[0.875rem] font-sans rounded-xl hover:border-pm-blue hover:text-pm-blue transition-colors flex items-center justify-center gap-2"
+            className="w-full py-3 border border-slate-300 text-slate-800 font-bold text-[0.9rem] font-sans rounded-xl hover:border-pm-blue hover:text-pm-blue transition-colors flex items-center justify-center gap-2 bg-slate-50"
           >
-            <Globe size={16} className="text-pm-blue" />
+            <Globe size={18} className="text-pm-blue stroke-[2.2]" />
             {lang === 'en' ? 'Switch to ગુજરાતી' : 'Switch to English'}
           </button>
         </div>

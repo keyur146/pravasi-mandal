@@ -70,21 +70,22 @@ const activities = [
 
 function ActivityCard({ title, desc, date, img }) {
   return (
-    <div className="group overflow-hidden flex flex-col">
-      <div className="relative w-full h-[180px] overflow-hidden">
+    <div className="group overflow-hidden flex flex-col bg-white border border-slate-300 rounded-2xl shadow-2xs hover:border-pm-blue hover:shadow-md transition-all duration-300">
+      <div className="relative w-full h-[200px] overflow-hidden bg-slate-100">
         <Image
           src={img}
           alt={title}
           fill
-          className="object-cover group-hover:scale-105 rounded-md transition-transform duration-500 ease-out"
+          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+          className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
         />
-        <span className="absolute top-3 left-3 bg-white/95 backdrop-blur-sm text-pm-blue font-sans font-semibold text-[0.72rem] uppercase tracking-wider px-3 py-1.5 rounded-full shadow-xs">
+        <span className="absolute top-3 left-3 bg-slate-950/85 backdrop-blur-md text-white font-sans font-bold text-[0.72rem] uppercase tracking-wider px-3 py-1.5 rounded-lg shadow-md border border-white/20">
           {date}
         </span>
       </div>
-      <div className="px-1.2 py-5 flex flex-col gap-1.5">
-        <h3 className="font-heading font-semibold text-charcoal text-[1.05rem]">{title}</h3>
-        <p className="font-sans text-[0.875rem] text-warm-gray leading-relaxed">{desc}</p>
+      <div className="p-5 flex flex-col flex-1 gap-2">
+        <h3 className="font-heading font-bold text-slate-900 text-[1.12rem] leading-snug">{title}</h3>
+        <p className="font-sans text-[0.92rem] text-slate-700 leading-relaxed font-normal">{desc}</p>
       </div>
     </div>
   );
@@ -96,22 +97,24 @@ export default function ActivitiesPage() {
   return (
     <>
       {/* ── PAGE HERO ──────────────────────────────────────── */}
-      <section className="bg-pm-blue/90 border-b border-border py-7">
-        <div className="max-w-[1200px] mx-auto px-6 lg:px-8">
-          <span className="text-[0.78rem] font-sans font-semibold text-white uppercase tracking-widest block mb-1">
-            What We Offer
-          </span>
-          <h1 className="font-heading font-semibold mb-4 text-white!" style={{ fontSize: 'clamp(2rem, 4.5vw, 3rem)' }}>
+      <section className="bg-gradient-to-r from-slate-950 via-[#0E3D7D] to-slate-950 border-b border-slate-300 py-10 sm:py-14 text-white relative overflow-hidden">
+        <div className="max-w-[1200px] mx-auto px-6 lg:px-8 relative z-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-white/15 border border-white/20 mb-3 backdrop-blur-xs">
+            <span className="text-[0.78rem] font-sans font-extrabold text-white uppercase tracking-widest block">
+              {t('act_what_we_offer')}
+            </span>
+          </div>
+          <h1 className="font-heading font-extrabold mb-3 text-white tracking-tight" style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)' }}>
             {t('act_hero_heading')}
           </h1>
-          <p className="font-sans text-[1rem] text-white max-w-lg leading-relaxed">{t('act_intro')}</p>
+          <p className="font-sans text-[1.05rem] text-slate-100 max-w-2xl leading-relaxed font-medium">{t('act_intro')}</p>
         </div>
       </section>
 
       {/* ── ACTIVITIES GRID ──────────────────────────────────── */}
-      <section className="bg-ivory py-12">
+      <section className="bg-slate-50 py-14">
         <div className="max-w-[1200px] mx-auto px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {activities.map((act) => (
               <ActivityCard key={act.title} {...act} />
             ))}
@@ -120,7 +123,7 @@ export default function ActivitiesPage() {
       </section>
 
       {/* ── IMAGE STRIP ──────────────────────────────────────── */}
-      <section className="bg-white border-y border-border py-14">
+      <section className="bg-white border-y border-slate-300 py-14">
         <div className="max-w-[1200px] mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
             {[
@@ -130,13 +133,14 @@ export default function ActivitiesPage() {
             ].map((img, i) => (
               <div
                 key={i}
-                className="relative w-full h-[240px] rounded-2xl overflow-hidden border border-border shadow-xs"
+                className="relative w-full h-[240px] rounded-2xl overflow-hidden border-2 border-slate-300 shadow-2xs group"
               >
                 <Image
                   src={img.src}
                   alt={img.alt}
                   fill
-                  className="object-cover hover:scale-105 transition-transform duration-500 ease-out"
+                  sizes="(min-width: 640px) 33vw, 100vw"
+                  className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                 />
               </div>
             ))}
@@ -145,17 +149,19 @@ export default function ActivitiesPage() {
       </section>
 
       {/* ── CONTACT BANNER ───────────────────────────────────── */}
-      <section className="bg-pm-blue-light border-b border-border py-12">
+      <section className="bg-slate-100/70 border-b border-slate-300 py-14">
         <div className="max-w-[1200px] mx-auto px-6 lg:px-8">
           <div className="max-w-3xl mx-auto">
-            <span className="text-[0.78rem] font-sans font-semibold text-pm-blue uppercase tracking-widest block mb-3">
-              {t('act_info_label')}
-            </span>
-            <h2 className="font-heading font-semibold text-charcoal mb-8" style={{ fontSize: 'clamp(1.5rem, 3vw, 2.25rem)' }}>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-pm-blue-light border border-pm-blue/20 mb-3">
+              <span className="text-[0.78rem] font-sans font-bold text-pm-blue uppercase tracking-widest block">
+                {t('act_info_label')}
+              </span>
+            </div>
+            <h2 className="font-heading font-extrabold text-slate-900 mb-8 tracking-tight" style={{ fontSize: 'clamp(1.65rem, 3.2vw, 2.5rem)' }}>
               {t('act_info_heading')}
             </h2>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
               {[
                 { icon: Phone, label: t('contact_phone'),    value: '01933-442955', href: 'tel:01933442955' },
                 { icon: Phone, label: t('act_mobile'),       value: '07471186658',  href: 'tel:07471186658' },
@@ -163,26 +169,28 @@ export default function ActivitiesPage() {
                 { icon: Clock, label: t('act_opening'),      value: t('act_opening_val') },
                 { icon: Mail,  label: t('contact_email'),    value: 'pravasimandal2@btconnect.com', href: 'mailto:pravasimandal2@btconnect.com' },
               ].map(({ icon: Icon, label, value, href }) => (
-                <div key={label} className="bg-white border border-border rounded-xl p-4 flex items-start gap-3">
-                  <Icon size={16} className="text-pm-blue shrink-0 mt-0.5" />
+                <div key={label} className="bg-white border border-slate-300 rounded-xl p-4.5 flex items-start gap-3.5 shadow-2xs hover:border-pm-blue transition-colors">
+                  <div className="w-8 h-8 rounded-lg bg-pm-blue-light flex items-center justify-center shrink-0 mt-0.5">
+                    <Icon size={16} className="text-pm-blue stroke-[2.2]" />
+                  </div>
                   <div>
-                    <p className="font-sans text-[0.72rem] font-semibold text-warm-gray uppercase tracking-wider mb-0.5">{label}</p>
+                    <p className="font-sans text-[0.72rem] font-bold text-slate-700 uppercase tracking-wider mb-0.5">{label}</p>
                     {href ? (
-                      <a href={href} className="font-sans text-[0.875rem] text-charcoal hover:text-pm-blue transition-colors">{value}</a>
+                      <a href={href} className="font-sans text-[0.92rem] font-bold text-slate-900 hover:text-pm-blue transition-colors">{value}</a>
                     ) : (
-                      <p className="font-sans text-[0.875rem] text-charcoal">{value}</p>
+                      <p className="font-sans text-[0.92rem] font-bold text-slate-900 leading-snug">{value}</p>
                     )}
                   </div>
                 </div>
               ))}
             </div>
 
-            <div className="flex flex-wrap gap-3">
-              <a href="tel:01933442955" className="inline-flex items-center gap-2 px-6 py-3 bg-pm-blue text-white font-sans font-medium text-[0.875rem] rounded-xl hover:bg-pm-blue-dark transition-colors">
-                <Phone size={15} /> Call Us
+            <div className="flex flex-wrap gap-3.5">
+              <a href="tel:01933442955" className="inline-flex items-center gap-2 px-7 py-3 bg-gradient-to-r from-pm-blue to-pm-blue-dark text-white font-sans font-bold text-[0.9rem] rounded-xl hover:shadow-md transition-all">
+                <Phone size={16} className="stroke-[2.2]" /> Call Us
               </a>
-              <a href="mailto:pravasimandal2@btconnect.com" className="inline-flex items-center gap-2 px-6 py-3 bg-white text-charcoal border border-border font-sans font-medium text-[0.875rem] rounded-xl hover:border-pm-blue/40 hover:text-pm-blue transition-colors">
-                <Mail size={15} /> Email Us
+              <a href="mailto:pravasimandal2@btconnect.com" className="inline-flex items-center gap-2 px-7 py-3 bg-white text-slate-900 border-2 border-slate-300 font-sans font-bold text-[0.9rem] rounded-xl hover:border-pm-blue hover:text-pm-blue transition-colors shadow-2xs">
+                <Mail size={16} className="stroke-[2.2]" /> Email Us
               </a>
             </div>
           </div>

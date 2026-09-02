@@ -2,22 +2,27 @@
 
 @theme {
   /* Brand Colors — Fresh, modern, clean slate & subtle sky-neutral tone */
-  --color-ivory:          #F8FAFC;
-  --color-cream:          #F1F5F9;
-  --color-cream-dark:     #E2E8F0;
-  --color-charcoal:       #0F172A;
-  --color-warm-gray:      #64748B;
-  --color-light-gray:     #F8FAFC;
-  --color-sky-mist:       #F0F4F9;
-  --color-pm-blue:        #1B5BAF;
-  --color-pm-blue-dark:   #14478a;
-  --color-pm-blue-light:  #EFF6FF;
-  --color-border:         #E2E8F0;
-  --color-border-soft:    #F1F5F9;
+  --color-ivory: #F8FAFC;
+  --color-cream: #36311F;
+  --color-cream-dark: #E2E8F0;
+  --color-charcoal: #0F172A;
+  --color-warm-gray: #334155;
+  --color-warm-gray-muted: #475569;
+  --color-light-gray: #F8FAFC;
+  --color-sky-mist: #F0F4F9;
+  --color-pm-blue: #144EA1;
+  --color-pm-blue-dark: #0D3773;
+  --color-pm-blue-light: #EFF6FF;
+  --color-pm-blue-muted: #DBEAFE;
+  --color-navy-deep: #0B2240;
+  --color-border: #CBD5E1;
+  --color-border-soft: #E2E8F0;
+  --color-charity-gold: #B45309;
+  --color-charity-amber: #D97706;
 
   /* Fonts */
   --font-heading: var(--font-inter), system-ui, -apple-system, sans-serif;
-  --font-sans:    var(--font-dm-sans), system-ui, -apple-system, sans-serif;
+  --font-sans: var(--font-dm-sans), system-ui, -apple-system, sans-serif;
 }
 
 /* ─── Base ──────────────────────────────────────────── */
@@ -28,29 +33,43 @@ html {
 
 body {
   background-color: #F8FAFC;
-  color: #0F172A;
+  color: #1E293B;
   font-family: var(--font-dm-sans), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.7;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-inter), system-ui, sans-serif;
-  color: #0F172A;
   line-height: 1.25;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: -0.015em;
 }
 
 ::selection {
-  background: #EFF6FF;
-  color: #1B5BAF;
+  background: #DBEAFE;
+  color: #0D3773;
 }
 
 /* ─── Scrollbar ─────────────────────────────────────── */
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: #F1F5F9; }
-::-webkit-scrollbar-thumb { background: #1B5BAF; border-radius: 3px; }
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1B5BAF;
+  border-radius: 3px;
+}
 
 /* ─── Focus ─────────────────────────────────────────── */
 :focus-visible {
