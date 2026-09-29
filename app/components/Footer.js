@@ -2,123 +2,228 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Phone, Mail, Clock, Heart, ShieldCheck } from 'lucide-react';
+import {
+  Phone,
+  Mail,
+  Clock,
+  Heart,
+  ShieldCheck,
+  MapPin,
+  ArrowUp,
+  ChevronRight,
+  Sparkles,
+} from 'lucide-react';
 import { useLanguage } from './LanguageContext';
 
 export default function Footer() {
   const year = new Date().getFullYear();
   const { t } = useLanguage();
 
-  const quickLinks = [
-    { href: '/',           label: t('nav_home') },
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const navLinks = [
+    { href: '/', label: t('nav_home') },
+    { href: '/#our-story', label: t('nav_our_story') },
+    { href: '/team', label: t('nav_our_team') },
+    { href: '/services', label: t('nav_services') },
     { href: '/activities', label: t('nav_activities') },
-    { href: '/services',   label: t('nav_services') },
-    { href: '/gallery',    label: t('nav_gallery') },
-    { href: '/contact',    label: t('nav_contact') },
-    { href: '/support',    label: t('nav_support') },
+    { href: '/events', label: t('nav_events') },
+    { href: '/volunteer', label: t('nav_volunteer') },
+    { href: '/news', label: t('nav_news') },
+    { href: '/gallery', label: t('nav_gallery') },
+    { href: '/contact', label: t('nav_contact') },
   ];
 
   return (
-    <footer className="bg-slate-100 border-t border-slate-300 font-sans text-slate-800">
-      {/* Main */}
-      <div className="max-w-[1200px] mx-auto px-6 lg:px-10 py-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+    <footer className="relative bg-slate-950 text-slate-300 font-sans border-t-4 border-pm-blue overflow-hidden">
+      {/* Subtle background ambient light */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-64 bg-radial from-pm-blue/15 via-transparent to-transparent pointer-events-none" />
 
-        {/* Brand & Charity Trust */}
-        <div>
-          <div className="relative h-14 w-auto mb-4">
-            <Image src="/assets/img/pravasi-mandal-logo.png" alt="Pravasi Mandal" fill sizes="(min-width: 1024px) 240px, 100vw" className="object-contain object-left" />
-          </div>
-          <address className="not-italic text-[0.9rem] text-slate-700 font-medium leading-relaxed">
-            65 Elsden Road<br />
-            Wellingborough NN8 1QD<br />
-            Northamptonshire, UK
-          </address>
-          <div className="mt-4 inline-flex items-center gap-2 px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-[0.78rem] font-bold text-slate-800 shadow-2xs">
-            <ShieldCheck size={16} className="text-pm-blue stroke-[2.2]" />
-            <span>{t('footer_registered_charity')}</span>
-          </div>
-        </div>
-
-        {/* Contact */}
-        <div>
-          <h4 className="font-heading font-bold text-slate-900 text-[1rem] tracking-tight mb-4 border-b border-slate-200 pb-2">
-            {t('footer_contact')}
-          </h4>
-          <ul className="space-y-3">
-            <li>
-              <a href="tel:01933442955" className="flex items-center gap-2.5 text-[0.9rem] text-slate-700 font-medium hover:text-pm-blue transition-colors">
-                <div className="w-7 h-7 rounded-lg bg-white border border-slate-300 flex items-center justify-center shrink-0">
-                  <Phone size={14} className="text-pm-blue stroke-[2.2]" />
-                </div>
-                01933-442955
-              </a>
-            </li>
-            <li>
-              <a href="tel:07471186658" className="flex items-center gap-2.5 text-[0.9rem] text-slate-700 font-medium hover:text-pm-blue transition-colors">
-                <div className="w-7 h-7 rounded-lg bg-white border border-slate-300 flex items-center justify-center shrink-0">
-                  <Phone size={14} className="text-pm-blue stroke-[2.2]" />
-                </div>
-                07471186658
-              </a>
-            </li>
-            <li>
-              <a href="mailto:pravasimandal2@btconnect.com" className="flex items-start gap-2.5 text-[0.9rem] text-slate-700 font-medium hover:text-pm-blue transition-colors break-all">
-                <div className="w-7 h-7 rounded-lg bg-white border border-slate-300 flex items-center justify-center shrink-0 mt-0.5">
-                  <Mail size={14} className="text-pm-blue stroke-[2.2]" />
-                </div>
-                pravasimandal2@btconnect.com
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        {/* Quick Links */}
-        <div>
-          <h4 className="font-heading font-bold text-slate-900 text-[1rem] tracking-tight mb-4 border-b border-slate-200 pb-2">
-            {t('footer_quick')}
-          </h4>
-          <ul className="space-y-2.5">
-            {quickLinks.map(link => (
-              <li key={link.href}>
-                <Link href={link.href} className="text-[0.9rem] text-slate-700 font-medium hover:text-pm-blue hover:font-semibold transition-all">
-                  → {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Hours & Support */}
-        <div>
-          <h4 className="font-heading font-bold text-slate-900 text-[1rem] tracking-tight mb-4 border-b border-slate-200 pb-2">
-            {t('footer_hours')}
-          </h4>
-          <div className="flex items-start gap-2.5 mb-4">
-            <div className="w-7 h-7 rounded-lg bg-white border border-slate-300 flex items-center justify-center shrink-0 mt-0.5">
-              <Clock size={14} className="text-pm-blue stroke-[2.2]" />
+      {/* Main Footer Container */}
+      <div className="relative max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-10 pt-16 pb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
+          
+          {/* ── Column 1: Organization & Identity ── */}
+          <div className="space-y-4">
+            {/* Logo in high-contrast crisp white badge */}
+            <div className="bg-white p-2.5 rounded-2xl shadow-sm inline-block">
+              <div className="relative h-13 w-52 sm:w-56">
+                <Image
+                  src="/assets/img/pravasi-mandal-logo.png"
+                  alt="Pravasi Mandal Wellingborough"
+                  fill
+                  sizes="224px"
+                  className="object-contain object-left"
+                />
+              </div>
             </div>
-            <div className="text-[0.875rem] text-slate-700 space-y-1 font-medium">
-              <p><span className="font-bold text-slate-900">Mon – Fri:</span> 9:00 – 15:00</p>
-              <p><span className="font-bold text-slate-900">Sat – Sun:</span> Closed</p>
+
+            <p className="text-[0.92rem] text-slate-300 font-medium italic leading-relaxed">
+              &ldquo;Rooted in Asian heritage. Open to everyone.&rdquo;
+            </p>
+
+            <p className="text-[0.85rem] text-slate-400 leading-relaxed">
+              Serving elders, families, and the wider Northamptonshire community with cultural care, nutrition, and companionship since 1984.
+            </p>
+
+            {/* Address */}
+            <div className="pt-2 flex items-start gap-2.5 text-[0.88rem] text-slate-300">
+              <MapPin size={17} className="text-amber-400 shrink-0 mt-1 stroke-[2.2]" />
+              <address className="not-italic leading-snug">
+                65 Elsden Road<br />
+                Wellingborough NN8 1QD<br />
+                Northamptonshire, UK
+              </address>
+            </div>
+
+            {/* Charity Status Badge */}
+            <div className="pt-1">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-950/70 border border-emerald-500/30 rounded-lg text-[0.8rem] font-bold text-emerald-300 shadow-2xs">
+                <ShieldCheck size={16} className="text-emerald-400 stroke-[2.4]" />
+                <span>{t('footer_registered_charity')}</span>
+              </div>
             </div>
           </div>
-          <div className="mt-5">
-            <Link
-              href="/support"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-pm-blue to-pm-blue-dark text-white text-[0.875rem] font-bold rounded-xl hover:shadow-md transition-all shadow-2xs hover:scale-[1.02]"
-            >
-              <Heart size={15} className="fill-white/20" />
-              <span>{t('footer_support_btn')}</span>
-            </Link>
+
+          {/* ── Column 2: What We Do & Quick Links ── */}
+          <div>
+            <h4 className="font-heading font-bold text-white text-[1.05rem] tracking-tight mb-4 pb-2 border-b border-slate-800 flex items-center gap-2">
+              <Sparkles size={16} className="text-amber-400" />
+              <span>{t('footer_quick')}</span>
+            </h4>
+            <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2">
+              {navLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="group inline-flex items-center gap-1.5 text-[0.88rem] text-slate-300 hover:text-white hover:translate-x-1 transition-all duration-150 py-0.5"
+                  >
+                    <ChevronRight size={13} className="text-slate-500 group-hover:text-amber-400 transition-colors" />
+                    <span>{link.label}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* ── Column 3: Hours & Visiting ── */}
+          <div className="space-y-4">
+            <h4 className="font-heading font-bold text-white text-[1.05rem] tracking-tight mb-4 pb-2 border-b border-slate-800 flex items-center gap-2">
+              <Clock size={16} className="text-emerald-400 stroke-[2.2]" />
+              <span>{t('footer_hours')}</span>
+            </h4>
+
+            {/* Hours card */}
+            <div className="bg-slate-900/90 border border-slate-800 p-4 rounded-xl space-y-2 text-[0.88rem]">
+              <div className="flex justify-between items-center pb-2 border-b border-slate-800/80">
+                <span className="text-slate-400 font-medium">Monday – Friday:</span>
+                <span className="text-white font-bold">9:00 – 15:00</span>
+              </div>
+              <div className="flex justify-between items-center pt-1">
+                <span className="text-slate-400 font-medium">Saturday – Sunday:</span>
+                <span className="text-amber-400/90 font-semibold">Closed</span>
+              </div>
+              <p className="text-[0.76rem] text-slate-500 italic pt-1">
+                Hours subject to confirmation
+              </p>
+            </div>
+
+            {/* Meal & Transport Note */}
+            <div className="p-3.5 bg-pm-blue/15 border border-pm-blue/30 rounded-xl text-[0.82rem] text-slate-300 leading-relaxed">
+              <span className="font-bold text-white block mb-0.5">Vegetarian Day Care:</span>
+              Freshly cooked Gujarati vegetarian lunches and subsidised community transport available on scheduled days.
+            </div>
+          </div>
+
+          {/* ── Column 4: Contact & Support Us ── */}
+          <div className="space-y-4">
+            <h4 className="font-heading font-bold text-white text-[1.05rem] tracking-tight mb-4 pb-2 border-b border-slate-800 flex items-center gap-2">
+              <Phone size={16} className="text-emerald-400 stroke-[2.2]" />
+              <span>{t('footer_contact')}</span>
+            </h4>
+
+            <div className="space-y-2.5">
+              {/* Landline */}
+              <a
+                href="tel:01933442955"
+                className="flex items-center gap-3 p-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 hover:bg-slate-850 text-slate-200 hover:text-white transition-all group"
+              >
+                <div className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center shrink-0 group-hover:bg-emerald-500 group-hover:text-slate-950 transition-colors">
+                  <Phone size={15} className="stroke-[2.2]" />
+                </div>
+                <div>
+                  <div className="text-[0.75rem] text-slate-400 uppercase font-bold tracking-wider">Centre Telephone</div>
+                  <div className="text-[0.92rem] font-bold">01933 442955</div>
+                </div>
+              </a>
+
+              {/* Mobile */}
+              <a
+                href="tel:07471186658"
+                className="flex items-center gap-3 p-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 hover:bg-slate-850 text-slate-200 hover:text-white transition-all group"
+              >
+                <div className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center shrink-0 group-hover:bg-emerald-500 group-hover:text-slate-950 transition-colors">
+                  <Phone size={15} className="stroke-[2.2]" />
+                </div>
+                <div>
+                  <div className="text-[0.75rem] text-slate-400 uppercase font-bold tracking-wider">Mobile Contact</div>
+                  <div className="text-[0.92rem] font-bold">07471 186658</div>
+                </div>
+              </a>
+
+              {/* Email */}
+              <a
+                href="mailto:pravasimandal2@btconnect.com"
+                className="flex items-center gap-3 p-2.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 hover:bg-slate-850 text-slate-200 hover:text-white transition-all group"
+              >
+                <div className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center shrink-0 group-hover:bg-emerald-500 group-hover:text-slate-950 transition-colors">
+                  <Mail size={15} className="stroke-[2.2]" />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-[0.75rem] text-slate-400 uppercase font-bold tracking-wider">Email Us</div>
+                  <div className="text-[0.84rem] font-bold truncate">pravasimandal2@btconnect.com</div>
+                </div>
+              </a>
+            </div>
+
+            {/* Support CTA */}
+            <div className="pt-2">
+              <Link
+                href="/support"
+                className="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 bg-gradient-to-r from-pm-blue to-pm-blue-dark hover:from-pm-blue-dark hover:to-[#092552] text-white text-[0.92rem] font-bold rounded-xl shadow-md hover:shadow-lg transition-all transform hover:scale-[1.01]"
+              >
+                <Heart size={16} className="fill-white/20 stroke-[2.4]" />
+                <span>{t('footer_support_btn')}</span>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Bottom bar */}
-      <div className="border-t border-slate-200 bg-slate-200/60">
-        <div className="max-w-[1200px] mx-auto px-6 lg:px-10 py-4 flex flex-col sm:flex-row gap-2 items-center justify-between">
-          <p className="text-[0.82rem] font-medium text-slate-700">© {year} Pravasi Mandal. All rights reserved.</p>
-          <p className="text-[0.82rem] font-bold text-slate-700">{t('footer_tagline')}</p>
+      {/* ── Sub-Footer Bottom Bar ── */}
+      <div className="border-t border-slate-800 bg-slate-950/90 py-5">
+        <div className="max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-10 flex flex-col sm:flex-row items-center justify-between gap-4 text-[0.84rem] text-slate-400">
+          <div>
+            <p>
+              © {year} Pravasi Mandal. Registered Charity No. 1044439 · Est. 1984.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-6">
+            <span className="font-semibold text-slate-300">
+              {t('footer_tagline')}
+            </span>
+            <button
+              onClick={scrollToTop}
+              aria-label="Scroll back to top"
+              className="inline-flex items-center gap-1 text-slate-400 hover:text-white transition-colors cursor-pointer"
+            >
+              <span>Back to top</span>
+              <ArrowUp size={14} className="stroke-[2.5]" />
+            </button>
+          </div>
         </div>
       </div>
     </footer>

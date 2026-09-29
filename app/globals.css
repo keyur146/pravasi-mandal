@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
 @theme {
-  /* Brand Colors — Fresh, modern, clean slate & subtle sky-neutral tone */
+  /* Brand Colors */
   --color-ivory: #F8FAFC;
-  --color-cream: #36311F;
-  --color-cream-dark: #E2E8F0;
+  --color-cream: #FDF6EC;        /* ← fixed: was #36311F (dark brown) */
+  --color-cream-dark: #F5E9D5;
   --color-charcoal: #0F172A;
   --color-warm-gray: #334155;
   --color-warm-gray-muted: #475569;
@@ -28,7 +28,7 @@
 /* ─── Base ──────────────────────────────────────────── */
 html {
   scroll-behavior: smooth;
-  font-size: 16px;
+  font-size: 17px; /* ← increased from 16px; all rem values scale up */
 }
 
 body {
@@ -37,7 +37,7 @@ body {
   font-family: var(--font-dm-sans), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  line-height: 1.7;
+  line-height: 1.75;
 }
 
 h1,
@@ -50,6 +50,55 @@ h6 {
   line-height: 1.25;
   font-weight: 700;
   letter-spacing: -0.015em;
+}
+
+/* ─── Skip Link (Accessibility) ─────────────────────── */
+.skip-link {
+  position: absolute;
+  top: -9999px;
+  left: 0;
+  z-index: 9999;
+  padding: 0.75rem 1.5rem;
+  background: #144EA1;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  text-decoration: none;
+  border-radius: 0 0 8px 0;
+  transition: top 0.1s;
+}
+.skip-link:focus {
+  top: 0;
+  outline: 3px solid #D97706;
+  outline-offset: 2px;
+}
+
+/* ─── Reduced Motion ────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ─── Button minimum touch targets ─────────────────── */
+button,
+[role="button"],
+a {
+  min-height: 44px;     /* WCAG 2.5.5 minimum */
+  min-width: 44px;
+}
+
+/* Exceptions for purely decorative/inline elements */
+nav a,
+footer a,
+.btn-inline {
+  min-height: unset;
+  min-width: unset;
 }
 
 ::selection {
@@ -73,7 +122,7 @@ h6 {
 
 /* ─── Focus ─────────────────────────────────────────── */
 :focus-visible {
-  outline: 2px solid #1B5BAF;
+  outline: 3px solid #1B5BAF;
   outline-offset: 3px;
   border-radius: 4px;
 }
