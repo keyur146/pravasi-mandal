@@ -12,13 +12,12 @@ import {
   ChevronDown,
   Phone,
   Calendar,
-  Users,
   HandHeart,
   Newspaper,
   Handshake,
+  Sprout,
   Utensils,
   Activity,
-  History,
   ShieldCheck,
 } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
@@ -190,11 +189,21 @@ export default function Header() {
   const pathname = usePathname();
 
   useEffect(() => {
+    let rafId = null;
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      if (rafId) return; // throttle: at most one update per animation frame
+      rafId = requestAnimationFrame(() => {
+        setScrolled(window.scrollY > 10);
+        rafId = null;
+      });
     };
+    // Set initial value synchronously so SSR and client match
+    setScrolled(window.scrollY > 10);
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
   }, []);
 
   useEffect(() => {
@@ -215,21 +224,6 @@ export default function Header() {
   };
 
   // Structured menu items with descriptions and icons
-  const aboutItems = [
-    {
-      href: '/#our-story',
-      label: t('nav_our_story'),
-      desc: lang === 'gu' ? '૧૯૮૪ થી અમારો ઈતિહાસ' : 'Four decades of community service',
-      icon: History,
-    },
-    {
-      href: '/team',
-      label: t('nav_our_team'),
-      desc: lang === 'gu' ? 'ટ્રસ્ટીઓ અને સમિતિ' : 'Trustees, leadership & committee',
-      icon: Users,
-    },
-  ];
-
   const servicesActivitiesItems = [
     {
       href: '/services',
@@ -264,59 +258,85 @@ export default function Header() {
       desc: lang === 'gu' ? 'સમાચાર અને અપડેટ્સ' : 'Updates & community recognition',
       icon: Newspaper,
     },
-    {
-      href: '/contact#partners',
-      label: t('nav_partners'),
-      desc: lang === 'gu' ? 'અમારા સહયોગીઓ' : 'Our local civic & NHS partners',
-      icon: Handshake,
-    },
+    // {
+    //   href: '/projects',
+    //   label: t('nav_projects'),
+    //   desc: lang === 'gu' ? 'અમારી નવી પહેલ' : 'New community initiatives',
+    //   icon: Sprout,
+    // },
+    // {
+    //   href: '/partners',
+    //   label: t('nav_partners'),
+    //   desc: lang === 'gu' ? 'કાઉન્સિલ અને સામુદાયિક સંસ્થાઓ' : 'Councils & community organisations',
+    //   icon: Handshake,
+    // },
   ];
 
   return (
-    <header className="w-full relative z-40">
-      {/* ── 1. Top Trust Micro-Bar ── */}
-      <div className="bg-slate-950 text-slate-200 text-[0.8rem] sm:text-[0.84rem] py-1.5 px-4 sm:px-6 lg:px-8 border-b border-slate-800">
-        <div className="max-w-[1280px] mx-auto flex items-center justify-between font-sans">
-          {/* Left credentials */}
-          <div className="flex items-center gap-2 overflow-hidden whitespace-nowrap">
-            <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-            <span className="font-semibold text-slate-100">
-              Registered Charity · Est. 1984
-            </span>
-            <span className="hidden sm:inline text-slate-500">|</span>
-            <span className="hidden sm:inline text-slate-300 font-medium">
-              Asian Day Care &amp; Community Centre
-            </span>
-            <span className="hidden xl:inline text-slate-500">·</span>
-            <span className="hidden xl:inline text-slate-400 italic">
-              Rooted in Asian heritage. Open to everyone.
-            </span>
-          </div>
+    <header className="sticky top-0 z-40 w-full">
+      {/* ── 1. Top Trust Micro-Bar ──
+           grid-rows 1fr→0fr collapse is GPU-composited: no layout reflow,
+           no flicker. The inner div has overflow:hidden so content clips
+           cleanly as the row shrinks. ── */}
+      <div
+        className="bg-slate-950"
+        style={{
+          display: 'grid',
+          gridTemplateRows: scrolled ? '0fr' : '1fr',
+          transition: 'grid-template-rows 0.22s ease',
+        }}
+      >
+        <div className="overflow-hidden">
+          <div
+            className="text-slate-200 text-[0.8rem] sm:text-[0.84rem] py-1.5 px-4 sm:px-6 lg:px-8 border-b border-slate-800"
+            style={{
+              opacity: scrolled ? 0 : 1,
+              transition: 'opacity 0.15s ease',
+            }}
+          >
+            <div className="max-w-[1280px] mx-auto flex items-center justify-between font-sans">
+              {/* Left credentials */}
+              <div className="flex items-center gap-2 overflow-hidden whitespace-nowrap">
+                <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+                <span className="font-semibold text-slate-100">
+                  Registered Charity · Est. 1984
+                </span>
+                <span className="hidden sm:inline text-slate-500">|</span>
+                <span className="hidden sm:inline text-slate-300 font-medium">
+                  Asian Day Care &amp; Community Centre
+                </span>
+                <span className="hidden xl:inline text-slate-500">·</span>
+                <span className="hidden xl:inline text-slate-400 italic">
+                  Rooted in Asian heritage. Open to everyone.
+                </span>
+              </div>
 
-          {/* Right quick contact */}
-          <div className="flex items-center gap-4 text-slate-300 font-semibold shrink-0 pl-2">
-            <a
-              href="tel:01933442955"
-              className="inline-flex items-center gap-1.5 hover:text-white transition-colors"
-            >
-              <Phone size={13} className="text-emerald-400 stroke-[2.4]" />
-              <span>01933 442955</span>
-            </a>
+              {/* Right quick contact */}
+              <div className="flex items-center gap-4 text-slate-300 font-semibold shrink-0 pl-2">
+                <a
+                  href="tel:01933442955"
+                  className="inline-flex items-center gap-1.5 hover:text-white transition-colors"
+                >
+                  <Phone size={13} className="text-emerald-400 stroke-[2.4]" />
+                  <span>01933 442955</span>
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       {/* ── 2. Main Navigation Bar (Sticky with Glassmorphism) ── */}
       <div
-        className={`sticky top-0 z-40 w-full transition-all duration-200 ${scrolled
+        className={`w-full transition-all duration-200 ${scrolled
           ? 'bg-white/95 backdrop-blur-md shadow-md border-b border-slate-200 py-2'
           : 'bg-white border-b border-slate-200/80 py-3'
           }`}
       >
-        <div className="max-w-[1280px] mx-auto flex items-center justify-between gap-2">
+        <div className="max-w-[1280px] mx-auto flex items-center justify-between gap-1 sm:gap-2 px-3 sm:px-6 lg:px-8">
           {/* Logo */}
           <Link href="/" className="flex items-center shrink-0 group">
-            <div className="relative h-12 sm:h-14 md:h-15 w-44 sm:w-56 transition-transform group-hover:scale-[1.01]">
+            <div className="relative h-12 sm:h-14 md:h-15 w-36 sm:w-56 transition-transform group-hover:scale-[1.01]">
               <Image
                 src="/assets/img/pravasi-mandal-logo.png"
                 alt="Pravasi Mandal Wellingborough"
@@ -330,7 +350,7 @@ export default function Header() {
 
           {/* Desktop Navigation Links (Visible ONLY on lg: 1024px+) */}
           <nav
-            className="hidden lg:flex items-center gap-0.5 xl:gap-1.5"
+            className="hidden xl:flex items-center gap-0.5 xl:gap-1.5"
             aria-label="Main navigation"
           >
             {/* Home */}
@@ -344,13 +364,16 @@ export default function Header() {
               {t('nav_home')}
             </Link>
 
-            {/* About (Dropdown) */}
-            <DesktopDropdown
-              label={t('nav_about')}
-              items={aboutItems}
-              pathname={pathname}
-              isActive={isActive}
-            />
+            {/* Team */}
+            <Link
+              href="/team"
+              className={`px-3 py-2 rounded-xl font-sans font-bold text-[0.88rem] xl:text-[0.92rem] whitespace-nowrap transition-all duration-150 ${isActive('/team')
+                ? 'text-pm-blue bg-pm-blue-light/80 shadow-2xs font-extrabold'
+                : 'text-slate-700 hover:text-pm-blue hover:bg-slate-100/80'
+                }`}
+            >
+              {t('nav_our_team')}
+            </Link>
 
             {/* Services & Activities (Dropdown) */}
             <DesktopDropdown
@@ -392,34 +415,34 @@ export default function Header() {
           </nav>
 
           {/* Right Action Buttons */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          <div className="flex items-center gap-1 sm:gap-3 shrink-0">
             {/* Language Switcher */}
             <button
               onClick={() => setLang(lang === 'en' ? 'gu' : 'en')}
               id="lang-toggle"
               aria-label={lang === 'en' ? 'Switch to Gujarati' : 'Switch to English'}
-              className="flex items-center gap-1.5 px-3 py-2 sm:px-3.5 sm:py-2 rounded-xl text-[0.84rem] sm:text-[0.88rem] font-sans font-bold text-slate-800 bg-slate-100/90 border border-slate-300 hover:border-pm-blue hover:text-pm-blue hover:bg-white transition-all shadow-2xs cursor-pointer"
+              className="flex items-center gap-1 sm:gap-1.5 px-2 py-2 sm:px-3.5 rounded-xl text-[0.84rem] sm:text-[0.88rem] font-sans font-bold text-slate-800 bg-slate-100/90 border border-slate-300 hover:border-pm-blue hover:text-pm-blue hover:bg-white transition-all shadow-2xs cursor-pointer"
             >
               <Globe size={16} className="text-pm-blue stroke-[2.3] shrink-0" />
               <span>{lang === 'en' ? 'ગુજરાતી' : 'English'}</span>
             </button>
 
-            {/* Support Us CTA (Desktop & Tablet) */}
+            {/* Support Us CTA (Desktop) */}
             <Link
               href="/support"
               id="support-cta"
-              className="hidden sm:inline-flex items-center gap-1.5 px-4 xl:px-5 py-2 sm:py-2.5 bg-gradient-to-r from-pm-blue to-pm-blue-dark hover:from-pm-blue-dark hover:to-[#0B254E] text-white text-[0.88rem] xl:text-[0.92rem] font-sans font-bold rounded-xl shadow-xs hover:shadow-md transition-all duration-200 hover:scale-[1.02] cursor-pointer"
+              className="hidden xl:inline-flex items-center gap-1.5 px-4 xl:px-5 py-2 sm:py-2.5 bg-gradient-to-r from-pm-blue to-pm-blue-dark hover:from-pm-blue-dark hover:to-[#0B254E] text-white text-[0.88rem] xl:text-[0.92rem] font-sans font-bold rounded-xl shadow-xs hover:shadow-md transition-all duration-200 hover:scale-[1.02] cursor-pointer"
             >
               <Heart size={15} className="fill-white/20 stroke-[2.4]" />
               <span>{t('nav_support')}</span>
             </Link>
 
-            {/* Hamburger Menu Toggle (Mobile + Tablet < 1024px) */}
+            {/* Hamburger Menu Toggle (Mobile + Tablet < 1280px) */}
             <button
               id="hamburger-btn"
               onClick={() => setMobileMenuOpen(true)}
               aria-label="Open navigation menu"
-              className="lg:hidden flex items-center justify-center w-11 h-11 rounded-xl border border-slate-300 bg-white text-slate-800 hover:bg-slate-100 hover:text-pm-blue transition-colors cursor-pointer"
+              className="xl:hidden flex items-center justify-center w-11 h-11 rounded-xl border border-slate-300 bg-white text-slate-800 hover:bg-slate-100 hover:text-pm-blue transition-colors cursor-pointer"
             >
               <Menu size={22} className="stroke-[2.4]" />
             </button>
@@ -474,13 +497,17 @@ export default function Header() {
                 {t('nav_home')}
               </Link>
 
-              {/* About Section */}
-              <MobileSection
-                label={t('nav_about')}
-                items={aboutItems}
-                isActive={isActive}
-                onClose={() => setMobileMenuOpen(false)}
-              />
+              {/* Team */}
+              <Link
+                href="/team"
+                onClick={() => setMobileMenuOpen(false)}
+                className={`block px-4 py-3 rounded-xl font-bold text-[0.98rem] transition-colors ${isActive('/team')
+                  ? 'text-pm-blue bg-pm-blue-light'
+                  : 'text-slate-800 hover:bg-slate-100'
+                  }`}
+              >
+                {t('nav_our_team')}
+              </Link>
 
               {/* Services & Activities Section */}
               <MobileSection

@@ -7,52 +7,7 @@ import {
   Users, Sparkles, Calendar, HandHeart, Handshake,
 } from 'lucide-react';
 import { useLanguage } from './components/LanguageContext';
-
-// ─── Placeholder upcoming events (replace with real data from Task 2) ─────────
-const UPCOMING_EVENTS = [
-  {
-    id: 'diwali-2026',
-    title: 'Diwali Celebration',
-    date: 'November 2026',
-    location: 'Pravasi Mandal Centre',
-    tag: 'Festival',
-  },
-  {
-    id: 'health-check',
-    title: 'Community Health & Wellbeing Day',
-    date: 'October 2026',
-    location: 'Pravasi Mandal Centre',
-    tag: 'Health',
-  },
-  {
-    id: 'new-year-2027',
-    title: 'New Year Social Gathering',
-    date: 'January 2027',
-    location: 'Pravasi Mandal Centre',
-    tag: 'Social',
-  },
-];
-
-function EventCard({ event }) {
-  return (
-    <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-2xs hover:border-pm-blue hover:shadow-md transition-all duration-200 flex flex-col gap-3">
-      <span className="inline-flex self-start px-2.5 py-1 rounded-full bg-pm-blue-light text-pm-blue text-[0.75rem] font-extrabold uppercase tracking-wider">
-        {event.tag}
-      </span>
-      <h3 className="font-heading font-extrabold text-slate-900 text-[1.05rem] leading-snug">
-        {event.title}
-      </h3>
-      <div className="flex items-center gap-1.5 text-[0.85rem] text-slate-500 font-medium">
-        <Calendar size={14} className="text-pm-blue shrink-0" />
-        {event.date}
-      </div>
-      <div className="flex items-center gap-1.5 text-[0.85rem] text-slate-500 font-medium">
-        <MapPin size={14} className="text-pm-blue shrink-0" />
-        {event.location}
-      </div>
-    </div>
-  );
-}
+import UpcomingEventsStrip from './components/UpcomingEventsStrip';
 
 function AudienceChip({ label }) {
   return (
@@ -271,11 +226,7 @@ export default function HomePage() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {UPCOMING_EVENTS.map((ev) => (
-              <EventCard key={ev.id} event={ev} />
-            ))}
-          </div>
+          <UpcomingEventsStrip count={3} />
 
         </div>
       </section>

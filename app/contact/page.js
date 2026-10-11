@@ -1,9 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense } from 'react';
 import Image from 'next/image';
-import { Phone, Mail, MapPin, Clock, Send } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
+import { Phone, Mail, MapPin, Clock } from 'lucide-react';
 import { useLanguage } from '../components/LanguageContext';
+import EnquiryForm from '../components/EnquiryForm';
+import { CONTACT_FOR_SLUG_MAP } from '../../lib/formOptions';
 
 const openingHours = [
   { day_key: 'day_mon', open: '09:00 am', close: '15:00 pm' },
@@ -55,19 +58,32 @@ function GroupLabel({ label }) {
   );
 }
 
+// ── Inner component that reads search params ──────────────────────────────────
+function ContactFormSection() {
+  const { t } = useLanguage();
+  const searchParams = useSearchParams();
+  const forSlug = (searchParams.get('for') || '').toLowerCase();
+  const defaultFor = CONTACT_FOR_SLUG_MAP[forSlug] || '';
+
+  return (
+    <div className="lg:col-span-7">
+      <div className="bg-white border-2 border-slate-300 rounded-3xl p-5 md:p-8 lg:p-10 shadow-md">
+        <h2 className="font-heading font-extrabold text-slate-900 text-2xl mb-6 tracking-tight">
+          {t('con_form_heading')}
+        </h2>
+        <EnquiryForm variant="contact" defaultFor={defaultFor} />
+      </div>
+    </div>
+  );
+}
+
+// ── Page ──────────────────────────────────────────────────────────────────────
 export default function ContactPage() {
   const { t } = useLanguage();
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
-  const [submitted, setSubmitted] = useState(false);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setSubmitted(true);
-  };
 
   return (
     <div className="bg-slate-50 min-h-screen text-slate-800">
-      {/* ── 1. CONTACT HERO ────────────────────────────────────────── */}
+      {/* ── 1. CONTACT HERO ─────────────────────────────────────────────── */}
       <section className="bg-gradient-to-r from-slate-950 via-[#0E3D7D] to-slate-950 border-b border-slate-300 py-10 sm:py-14 text-white relative overflow-hidden">
         <div className="max-w-[1200px] mx-auto px-6 lg:px-8 relative z-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-white/15 border border-white/20 mb-3 backdrop-blur-xs">
@@ -82,7 +98,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* ── 2. GET IN TOUCH (DETAILS + FORM) ─────────────────────── */}
+      {/* ── 2. GET IN TOUCH (DETAILS + FORM) ───────────────────────────── */}
       <section className="bg-white border-b border-slate-300 py-14 lg:py-20">
         <div className="max-w-[1200px] mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
@@ -150,91 +166,18 @@ export default function ContactPage() {
             </div>
 
             {/* RIGHT COLUMN: Contact Form */}
-            <div className="lg:col-span-7">
-              <div className="bg-white border-2 border-slate-300 rounded-3xl p-8 lg:p-10 shadow-md">
-                <h3 className="font-heading font-extrabold text-slate-900 text-2xl mb-6 tracking-tight">
-                  {t('con_form_heading')}
-                </h3>
-
-                {submitted ? (
-                  <div className="bg-blue-50 border-2 border-pm-blue/30 rounded-2xl p-8 text-center space-y-3">
-                    <div className="w-14 h-14 rounded-full bg-pm-blue text-white flex items-center justify-center mx-auto text-2xl font-bold">
-                      ✓
-                    </div>
-                    <h4 className="font-heading font-extrabold text-slate-900 text-xl">Thank You!</h4>
-                    <p className="font-sans text-[1rem] text-slate-700 font-medium">
-                      Your message has been sent successfully. We will get back to you soon.
-                    </p>
-                    <button
-                      onClick={() => { setSubmitted(false); setFormData({ name: '', email: '', message: '' }); }}
-                      className="mt-4 inline-flex px-6 py-3 bg-pm-blue text-white font-sans text-[0.9rem] font-bold rounded-xl hover:bg-pm-blue-dark transition-colors"
-                    >
-                      Send Another Message
-                    </button>
-                  </div>
-                ) : (
-                  <form onSubmit={handleSubmit} className="space-y-5">
-                    <div className="space-y-1.5">
-                      <label htmlFor="contact-name" className="font-sans text-[0.82rem] font-bold text-slate-800 uppercase tracking-wider">
-                        {t('con_name')} *
-                      </label>
-                      <input
-                        id="contact-name"
-                        type="text"
-                        required
-                        placeholder="Your full name"
-                        className="w-full px-4 py-3.5 bg-white border-2 border-slate-300 rounded-xl font-sans text-[0.95rem] text-slate-900 placeholder:text-slate-400 outline-none focus:border-pm-blue shadow-2xs transition-all"
-                        value={formData.name}
-                        onChange={(e) => setFormData((p) => ({ ...p, name: e.target.value }))}
-                      />
-                    </div>
-
-                    <div className="space-y-1.5">
-                      <label htmlFor="contact-email" className="font-sans text-[0.82rem] font-bold text-slate-800 uppercase tracking-wider">
-                        {t('con_email_field')} *
-                      </label>
-                      <input
-                        id="contact-email"
-                        type="email"
-                        required
-                        placeholder="your@email.com"
-                        className="w-full px-4 py-3.5 bg-white border-2 border-slate-300 rounded-xl font-sans text-[0.95rem] text-slate-900 placeholder:text-slate-400 outline-none focus:border-pm-blue shadow-2xs transition-all"
-                        value={formData.email}
-                        onChange={(e) => setFormData((p) => ({ ...p, email: e.target.value }))}
-                      />
-                    </div>
-
-                    <div className="space-y-1.5">
-                      <label htmlFor="contact-message" className="font-sans text-[0.82rem] font-bold text-slate-800 uppercase tracking-wider">
-                        {t('con_message')} *
-                      </label>
-                      <textarea
-                        id="contact-message"
-                        required
-                        placeholder="Please write your message here..."
-                        rows={5}
-                        className="w-full px-4 py-3.5 bg-white border-2 border-slate-300 rounded-xl font-sans text-[0.95rem] text-slate-900 placeholder:text-slate-400 outline-none focus:border-pm-blue shadow-2xs transition-all resize-y"
-                        value={formData.message}
-                        onChange={(e) => setFormData((p) => ({ ...p, message: e.target.value }))}
-                      />
-                    </div>
-
-                    <button
-                      id="contact-submit"
-                      type="submit"
-                      className="w-full inline-flex items-center justify-center gap-2 py-4 bg-gradient-to-r from-pm-blue to-pm-blue-dark text-white font-sans font-bold text-[0.95rem] rounded-xl hover:shadow-lg transition-all hover:scale-[1.01] shadow-md"
-                    >
-                      <Send size={17} className="stroke-[2.2]" /> {t('con_send')}
-                    </button>
-                  </form>
-                )}
+            <Suspense fallback={
+              <div className="lg:col-span-7">
+                <div className="bg-white border-2 border-slate-300 rounded-3xl p-5 md:p-8 lg:p-10 shadow-md animate-pulse h-96" />
               </div>
-            </div>
+            }>
+              <ContactFormSection />
+            </Suspense>
           </div>
         </div>
       </section>
 
-      {/* ── 3. OPENING HOURS ───────────────────────────────────────── */}
+      {/* ── 3. OPENING HOURS ───────────────────────────────────────────── */}
       <section className="bg-slate-100/70 border-b border-slate-300 py-14">
         <div className="max-w-xl mx-auto px-6 text-center">
           <div className="inline-flex items-center gap-2 text-pm-blue mb-3 px-3 py-1 bg-pm-blue-light border border-pm-blue/20 rounded-md">
@@ -264,7 +207,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* ── 5. COMMITTEE SECTION ───────────────────────────────────── */}
+      {/* ── 5. COMMITTEE SECTION ─────────────────────────────────────────── */}
       <section className="bg-white border-b border-slate-300 py-14 lg:py-20">
         <div className="max-w-[1200px] mx-auto px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-12">
@@ -278,33 +221,27 @@ export default function ContactPage() {
             </h2>
           </div>
 
-          {/* Leadership (4 columns) */}
+          {/* Leadership */}
           <GroupLabel label={t('con_leadership')} />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {leadership.map((p) => (
-              <MemberCard key={p.name} {...p} />
-            ))}
+            {leadership.map((p) => <MemberCard key={p.name} {...p} />)}
           </div>
 
-          {/* Holding Trustees (3 columns) */}
+          {/* Holding Trustees */}
           <GroupLabel label={t('con_trustees')} />
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {trustees.map((p) => (
-              <MemberCard key={p.name} {...p} />
-            ))}
+            {trustees.map((p) => <MemberCard key={p.name} {...p} />)}
           </div>
 
-          {/* Committee Members (4 columns) */}
+          {/* Committee Members */}
           <GroupLabel label={t('con_members')} />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {members.map((p) => (
-              <MemberCard key={p.name} {...p} />
-            ))}
+            {members.map((p) => <MemberCard key={p.name} {...p} />)}
           </div>
         </div>
       </section>
 
-      {/* ── 6. FIND US / MAP ───────────────────────────────────────── */}
+      {/* ── 6. FIND US / MAP ─────────────────────────────────────────────── */}
       <section className="bg-slate-100 border-b border-slate-300">
         <div className="w-full h-[450px]">
           <iframe
@@ -320,7 +257,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* ── 7. LIFE AT PRAVASI MANDAL (COMMUNITY IMAGES) ───────────── */}
+      {/* ── 7. LIFE AT PRAVASI MANDAL ─────────────────────────────────────── */}
       <section className="bg-slate-50 py-14 lg:py-20">
         <div className="max-w-[1200px] mx-auto px-6 lg:px-8">
           <div className="text-center max-w-xl mx-auto mb-10">

@@ -44,7 +44,7 @@ export default function Footer() {
       {/* Main Footer Container */}
       <div className="relative max-w-[1280px] mx-auto px-5 sm:px-8 lg:px-10 pt-16 pb-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
-          
+
           {/* ── Column 1: Organization & Identity ── */}
           <div className="space-y-4">
             {/* Logo in high-contrast crisp white badge */}
@@ -55,7 +55,7 @@ export default function Footer() {
                   alt="Pravasi Mandal Wellingborough"
                   fill
                   sizes="224px"
-                  className="object-contain object-left"
+                  className="object-cover object-left"
                 />
               </div>
             </div>

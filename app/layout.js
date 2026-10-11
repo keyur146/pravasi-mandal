@@ -18,6 +18,8 @@ const dmSans = DM_Sans({
 });
 
 export const metadata = {
+  // Needed so relative Open Graph image URLs resolve. Set NEXT_PUBLIC_SITE_URL in production.
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
   title: "Pravasi Mandal — Asian Day Care & Community Centre",
   description:
     "Pravasi Mandal is a registered charity in Northamptonshire connecting people, celebrating culture and supporting wellbeing for the Asian community and beyond since 1984.",
